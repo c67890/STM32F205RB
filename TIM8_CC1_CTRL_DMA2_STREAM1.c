@@ -10,14 +10,14 @@ void hf_timer8_init(void)
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
 	
-	TIM_TimeBaseStructure.TIM_Period = 100-1;												// 1000us *100 = 0.1s¼´Îª10 Hz		   counterµÄ´ÎÊý(¶àÉÙ¸öcounterºó½øÖÐ¶Ï)
-	TIM_TimeBaseStructure.TIM_Prescaler = 6000-1;											// 60M Hz /60000 = 1000 ,¼´Ã¿counterÒ»´ÎµÄÊ±¼äÎª1ms
+	TIM_TimeBaseStructure.TIM_Period = 100-1;						
+	TIM_TimeBaseStructure.TIM_Prescaler = 6000-1;					        
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
 
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;												// TIM8_CH1 PC6
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;											// ¸´ÓÃÍÆÍìÊä³ö
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;							// å¤ç”¨æŽ¨æŒ½è¾“å‡º
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 	GPIO_PinAFConfig(GPIOC,GPIO_PinSource6,GPIO_AF_TIM8);
@@ -30,14 +30,14 @@ void hf_timer8_init(void)
 	TIM_OC1Init(TIM8, &TIM_OCInitStructure);
 	TIM_CtrlPWMOutputs(TIM8,ENABLE);	
 
-	NVIC_InitStructure.NVIC_IRQChannel = TIM8_CC_IRQn;										// DMA IT CONFIG
+	NVIC_InitStructure.NVIC_IRQChannel = TIM8_CC_IRQn;						// DMA IT CONFIG
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;  
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;	
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;  
 	NVIC_Init(&NVIC_InitStructure);  
 
 	TIM_ClearFlag(TIM8,TIM_FLAG_CC1);
-	TIM_ITConfig(TIM8, TIM_FLAG_CC1, ENABLE);												// ¿ªÖÐ¶Ï
+	TIM_ITConfig(TIM8, TIM_FLAG_CC1, ENABLE);												// å¼€ä¸­æ–­
 
 	TIM_DMACmd(TIM8,TIM_DMA_CC1,ENABLE);
 	TIM_Cmd(TIM8,ENABLE);
@@ -51,25 +51,25 @@ void DMA_Auto_Config_CR(void)
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1|RCC_AHB1Periph_DMA2,ENABLE);	  
 
 	DMA_DeInit(DMA2_Stream2);
-	while (DMA_GetCmdStatus(DMA2_Stream2) != DISABLE){}									// µÈ´ýDMA¿ÉÅäÖÃ 
+	while (DMA_GetCmdStatus(DMA2_Stream2) != DISABLE){}						// ç­‰å¾…DMAå¯é…ç½® 
 
-	DMA_InitStructure.DMA_Channel				 = DMA_Channel_7;						// Í¨µÀÑ¡Ôñ
-	DMA_InitStructure.DMA_PeripheralBaseAddr	 = (uint32_t)(&DMA2_Stream3->CR);		// DMAÍâÉèµØÖ·(SOURCE ADDR)
-	DMA_InitStructure.DMA_Memory0BaseAddr		 = (uint32_t)(config_CR);				// DMA ´æ´¢Æ÷0µØÖ·
-	DMA_InitStructure.DMA_DIR					 = DMA_DIR_MemoryToPeripheral;			// ÄÚ´æµ½ÍâÉè
+	DMA_InitStructure.DMA_Channel				 = DMA_Channel_7;			// é€šé“é€‰æ‹©
+	DMA_InitStructure.DMA_PeripheralBaseAddr		 = (uint32_t)(&DMA2_Stream3->CR);	// DMAå¤–è®¾åœ°å€(SOURCE ADDR)
+	DMA_InitStructure.DMA_Memory0BaseAddr			 = (uint32_t)(config_CR);		// DMA å­˜å‚¨å™¨0åœ°å€
+	DMA_InitStructure.DMA_DIR				 = DMA_DIR_MemoryToPeripheral;		// å†…å­˜åˆ°å¤–è®¾
 
-	DMA_InitStructure.DMA_BufferSize			 = 5;									// Êý¾Ý´«ÊäÁ¿ 
-	DMA_InitStructure.DMA_PeripheralInc			 = DMA_PeripheralInc_Disable;			// ÍâÉèÔöÁ¿Ä£Ê½
-	DMA_InitStructure.DMA_MemoryInc				 = DMA_MemoryInc_Enable;				// ´æ´¢Æ÷·ÇÔöÁ¿Ä£Ê½
-	DMA_InitStructure.DMA_PeripheralDataSize	 = DMA_PeripheralDataSize_Word;			// ÍâÉèÊý¾Ý³¤¶È:16Î»
-	DMA_InitStructure.DMA_MemoryDataSize			 = DMA_MemoryDataSize_Word;			// ´æ´¢Æ÷Êý¾Ý³¤¶È:16Î»
-	DMA_InitStructure.DMA_Mode 					 = DMA_Mode_Circular;					// Ê¹ÓÃÑ­»·Ä£Ê½ 
-	DMA_InitStructure.DMA_Priority 				 = DMA_Priority_High;					// ÓÅÏÈ¼¶
+	DMA_InitStructure.DMA_BufferSize			 = 5;					// æ•°æ®ä¼ è¾“é‡ 
+	DMA_InitStructure.DMA_PeripheralInc			 = DMA_PeripheralInc_Disable;		// å¤–è®¾å¢žé‡æ¨¡å¼
+	DMA_InitStructure.DMA_MemoryInc				 = DMA_MemoryInc_Enable;		// å­˜å‚¨å™¨éžå¢žé‡æ¨¡å¼
+	DMA_InitStructure.DMA_PeripheralDataSize		 = DMA_PeripheralDataSize_Word;		// å¤–è®¾æ•°æ®é•¿åº¦:16ä½
+	DMA_InitStructure.DMA_MemoryDataSize			 = DMA_MemoryDataSize_Word;		// å­˜å‚¨å™¨æ•°æ®é•¿åº¦:16ä½
+	DMA_InitStructure.DMA_Mode 				 = DMA_Mode_Circular;			// ä½¿ç”¨å¾ªçŽ¯æ¨¡å¼ 
+	DMA_InitStructure.DMA_Priority 				 = DMA_Priority_High;			// ä¼˜å…ˆçº§
 	DMA_InitStructure.DMA_FIFOMode 				 = DMA_FIFOMode_Disable;	  
 
 	DMA_InitStructure.DMA_FIFOThreshold			 = DMA_FIFOThreshold_Full;
-	DMA_InitStructure.DMA_MemoryBurst			 = DMA_MemoryBurst_Single;				 // ´æ´¢Æ÷Í»·¢µ¥´Î´«Êä
-	DMA_InitStructure.DMA_PeripheralBurst		 = DMA_PeripheralBurst_Single;			 // ÍâÉèÍ»·¢µ¥´Î´«Êä
+	DMA_InitStructure.DMA_MemoryBurst			 = DMA_MemoryBurst_Single;		// å­˜å‚¨å™¨çªå‘å•æ¬¡ä¼ è¾“
+	DMA_InitStructure.DMA_PeripheralBurst			 = DMA_PeripheralBurst_Single;		// å¤–è®¾çªå‘å•æ¬¡ä¼ è¾“
 	DMA_Init(DMA2_Stream2, &DMA_InitStructure);
 }
 
@@ -78,8 +78,8 @@ int main(void)
 	int i = 0;
 	
 	uart5_init();
-	DMA_Auto_Config_CR1();						// dma2_stream2_channel7	config
-	hf_timer8_init1();							// timer8 
+	DMA_Auto_Config_CR();						
+	hf_timer8_init();							
 	while(1)
 	{	
 		printf("DMA2_Stream3->CR 1111= 0x%x\n",DMA2_Stream3->CR);		
@@ -89,10 +89,10 @@ int main(void)
 
 void TIM8_CC_IRQHandler(void)
 {
-	if(TIM_GetITStatus(TIM8,TIM_IT_CC1)==SET) //Òç³öÖÐ¶Ï
+	if(TIM_GetITStatus(TIM8,TIM_IT_CC1)==SET) 							// CC1ä¸­æ–­
 	{
 		TIM_Cmd(TIM8, DISABLE);
-		TIM_ClearITPendingBit(TIM8,TIM_IT_CC1);			/*Çå³ýÖÐ¶Ï±êÖ¾Î»*/
+		TIM_ClearITPendingBit(TIM8,TIM_IT_CC1);							// æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
 		
 
 		timer8_times_count++;
@@ -110,7 +110,7 @@ void TIM8_CC_IRQHandler(void)
 }
 
 /*
-´òÓ¡½á¹û£º 
+æ‰“å°ç»“æžœï¼š 
 					......
 			DMA2_Stream3->CR 1111= 0x6030444
 			DMA2_Stream3->CR 1111= 0x6030444
