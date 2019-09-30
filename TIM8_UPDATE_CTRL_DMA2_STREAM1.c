@@ -1,23 +1,23 @@
 /*
-	³ÌÐòÊµÏÖÄÚÈÝ£ºÍ¨¹ý¶¨Ê±Æ÷´¥·¢DMA,ÊµÏÖDMA´«ÊäµÄ¿É¿ØÐÔ 
+	ç¨‹åºå®žçŽ°å†…å®¹ï¼šé€šè¿‡å®šæ—¶å™¨è§¦å‘DMA,å®žçŽ°DMAä¼ è¾“çš„å¯æŽ§æ€§ 
 	
-	³ÌÐòÍ¨¹ý ¶¨Ê±Æ÷8 ´¥·¢ DMA2_Stream1¿ªÆô£¬DMA2_Stream1´ÓÄÚ´æµ½ÍâÉè´«µÝÊý¾Ý£¬Ã¿´Î´«µÝÊý¾ÝµÄ¸öÊýÎª5
-	TIM8 Ã¿´¥·¢Ò»´Î£¬ DMA2_Stream1 ¿ªÆôÒ»´Î´«Êä£¬TIM8 ´¥·¢100´Îºó£¬¹Ø±ÕTIM8,Çå¿Õ ÍâÉè¼Ä´æÆ÷¡£
+	ç¨‹åºé€šè¿‡ å®šæ—¶å™¨8 è§¦å‘ DMA2_Stream1å¼€å¯ï¼ŒDMA2_Stream1ä»Žå†…å­˜åˆ°å¤–è®¾ä¼ é€’æ•°æ®ï¼Œæ¯æ¬¡ä¼ é€’æ•°æ®çš„ä¸ªæ•°ä¸º5
+	TIM8 æ¯è§¦å‘ä¸€æ¬¡ï¼Œ DMA2_Stream1 å¼€å¯ä¸€æ¬¡ä¼ è¾“ï¼ŒTIM8 è§¦å‘100æ¬¡åŽï¼Œå…³é—­TIM8,æ¸…ç©º å¤–è®¾å¯„å­˜å™¨ã€‚
 	
-	Ö÷º¯ÊýÖÐÑ­»·´òÓ¡ÍâÉè¼Ä´æÆ÷µÄÖµ£¬100´Î´¥·¢Ö®ÄÚ£¬ÍâÉè¼Ä´æÆ÷µÄÊý¾ÝÒ»Ö±ÔÚ¸üÐÂ£¬
-	¹Ø±Õ¶¨Ê±Æ÷ºó£¬ÍâÉè¼Ä´æÆ÷ÖÐµÄÊý¾ÝÎª0£¬±íÊ¾TI8¹Ø±Õºó£¬DMA²»ÔÙ±»´¥·¢¡£
+	ä¸»å‡½æ•°ä¸­å¾ªçŽ¯æ‰“å°å¤–è®¾å¯„å­˜å™¨çš„å€¼ï¼Œ100æ¬¡è§¦å‘ä¹‹å†…ï¼Œå¤–è®¾å¯„å­˜å™¨çš„æ•°æ®ä¸€ç›´åœ¨æ›´æ–°ï¼Œ
+	å…³é—­å®šæ—¶å™¨åŽï¼Œå¤–è®¾å¯„å­˜å™¨ä¸­çš„æ•°æ®ä¸º0ï¼Œè¡¨ç¤ºTI8å…³é—­åŽï¼ŒDMAä¸å†è¢«è§¦å‘ã€‚
 	
-	×¢£º±¾²âÊÔ×ÜTIM8¿ªÆôµÄÁËÖÐ¶Ï£¬ÓÃÀ´¹Û²ìºÍ²âÊÔÊ¹ÓÃ£¬Êµ¼ÊÓ¦ÓÃÖÐ¿ÉÒÔ²»¿ªÖÐ¶Ï£¬TIM8Í¬Ñù»á´¥·¢Æô¶¯DMA.
+	æ³¨ï¼šæœ¬æµ‹è¯•æ€»TIM8å¼€å¯çš„äº†ä¸­æ–­ï¼Œç”¨æ¥è§‚å¯Ÿå’Œæµ‹è¯•ä½¿ç”¨ï¼Œå®žé™…åº”ç”¨ä¸­å¯ä»¥ä¸å¼€ä¸­æ–­ï¼ŒTIM8åŒæ ·ä¼šè§¦å‘å¯åŠ¨DMA.
 */ 
 
 
-unsigned int timer8_times_count = 0;    // ¼ÆÊýÓÃ±äÁ¿ 
+unsigned int timer8_times_count = 0;    // è®¡æ•°ç”¨å˜é‡ 
 
-unsigned int config_CR[5] = {0x06030440,0x06030446,0x06030442,0x06030448,0x06030444}; // Íâ²¿Êý¾Ý 
+unsigned int config_CR[5] = {0x06030440,0x06030446,0x06030442,0x06030448,0x06030444}; // å¤–éƒ¨æ•°æ® 
 
 /*
-	Í¨¹ý DMA2_Stream1_DMA_Channel_7 Ïò  DMA2_Stream3µÄ CR ¼Ä´æÆ÷ÖÐ°áÔËÊý¾Ý 
-	×¢£ºÊý¾ÝÎª²âÊÔÊý¾Ý£¬ÎÞÊµ¼ÊÒâÒå£¬½öÓÃÓÚ²âÊÔ¹¦ÄÜ 
+	é€šè¿‡ DMA2_Stream1_DMA_Channel_7 å‘  DMA2_Stream3çš„ CR å¯„å­˜å™¨ä¸­æ¬è¿æ•°æ® 
+	æ³¨ï¼šæ•°æ®ä¸ºæµ‹è¯•æ•°æ®ï¼Œæ— å®žé™…æ„ä¹‰ï¼Œä»…ç”¨äºŽæµ‹è¯•åŠŸèƒ½ 
 */ 
 
 void DMA_Auto_Config_CR(void)
@@ -27,25 +27,25 @@ void DMA_Auto_Config_CR(void)
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1|RCC_AHB1Periph_DMA2,ENABLE);	  
 
 	DMA_DeInit(DMA2_Stream1);
-	while (DMA_GetCmdStatus(DMA2_Stream1) != DISABLE){}                         // µÈ´ýDMA¿ÉÅäÖÃ 
+	while (DMA_GetCmdStatus(DMA2_Stream1) != DISABLE){}                         // ç­‰å¾…DMAå¯é…ç½® 
 
-	DMA_InitStructure.DMA_Channel = DMA_Channel_7;                              // Í¨µÀÑ¡Ôñ
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&DMA2_Stream3->CR);   // DMAÍâÉèµØÖ·(SOURCE ADDR)
-	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)(config_CR);				// DMA ´æ´¢Æ÷0µØÖ·
-	DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;                     // ÄÚ´æµ½ÍâÉè
+	DMA_InitStructure.DMA_Channel = DMA_Channel_7;                              // é€šé“é€‰æ‹©
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&DMA2_Stream3->CR);   // DMAå¤–è®¾åœ°å€(SOURCE ADDR)
+	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)(config_CR);		    // DMA å­˜å‚¨å™¨0åœ°å€
+	DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;                     // å†…å­˜åˆ°å¤–è®¾
 
-	DMA_InitStructure.DMA_BufferSize = 5;										// Êý¾Ý´«ÊäÁ¿ 
-	DMA_InitStructure.DMA_PeripheralInc	= DMA_PeripheralInc_Disable;			// ÍâÉèÔöÁ¿Ä£Ê½
-	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;                     // ´æ´¢Æ÷·ÇÔöÁ¿Ä£Ê½
-	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;     // ÍâÉèÊý¾Ý³¤¶È:16Î»
-	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;             // ´æ´¢Æ÷Êý¾Ý³¤¶È:16Î»
-	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;                             // Ê¹ÓÃÑ­»·Ä£Ê½ 
-	DMA_InitStructure.DMA_Priority = DMA_Priority_High;                         // ÓÅÏÈ¼¶
+	DMA_InitStructure.DMA_BufferSize = 5;					    // æ•°æ®ä¼ è¾“é‡ 
+	DMA_InitStructure.DMA_PeripheralInc	= DMA_PeripheralInc_Disable;	    // å¤–è®¾å¢žé‡æ¨¡å¼
+	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;                     // å­˜å‚¨å™¨éžå¢žé‡æ¨¡å¼
+	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;     // å¤–è®¾æ•°æ®é•¿åº¦:16ä½
+	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;             // å­˜å‚¨å™¨æ•°æ®é•¿åº¦:16ä½
+	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;                             // ä½¿ç”¨å¾ªçŽ¯æ¨¡å¼ 
+	DMA_InitStructure.DMA_Priority = DMA_Priority_High;                         // ä¼˜å…ˆçº§
 	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;	  
 
 	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
-	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;                 // ´æ´¢Æ÷Í»·¢µ¥´Î´«Êä
-	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;         // ÍâÉèÍ»·¢µ¥´Î´«Êä
+	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;                 // å­˜å‚¨å™¨çªå‘å•æ¬¡ä¼ è¾“
+	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;         // å¤–è®¾çªå‘å•æ¬¡ä¼ è¾“
 	DMA_Init(DMA2_Stream1, &DMA_InitStructure);
 }
 void hf_timer8_init(void)
@@ -63,38 +63,38 @@ void hf_timer8_init(void)
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
 
-	NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_TIM13_IRQn;                    // Îª·½±ã¹Û²ì£¬ÅäÖÃTIM8 UPDATE ÖÐ¶Ï 
+	NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_TIM13_IRQn;                    // ä¸ºæ–¹ä¾¿è§‚å¯Ÿï¼Œé…ç½®TIM8 UPDATE ä¸­æ–­ 
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;  
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;  
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;  
 	NVIC_Init(&NVIC_InitStructure);  
 	
 	TIM_ClearFlag(TIM8,TIM_FLAG_Update);
-	TIM_ITConfig(TIM8, TIM_IT_Update, ENABLE);                                  // ¿ªÖÐ¶Ï±ãÓÚ¹Û²ì 
+	TIM_ITConfig(TIM8, TIM_IT_Update, ENABLE);                                  // å¼€ä¸­æ–­ä¾¿äºŽè§‚å¯Ÿ 
 	TIM_SelectOutputTrigger(TIM8, TIM_TRGOSource_Update);
 
-	TIM_DMACmd(TIM8,TIM_DMA_Update,ENABLE);                                     // ¿ªÆô TIM8 UPDATE ´¥·¢ DMA  ,¼´ DMA2_Stream1
-	TIM_Cmd(TIM8,ENABLE);                                                       // ¿ªÆô TIM8
-	DMA_Cmd(DMA2_Stream1, ENABLE);                                              // ¿ªÆô DMA 
+	TIM_DMACmd(TIM8,TIM_DMA_Update,ENABLE);                                     // å¼€å¯ TIM8 UPDATE è§¦å‘ DMA  ,å³ DMA2_Stream1
+	TIM_Cmd(TIM8,ENABLE);                                                       // å¼€å¯ TIM8
+	DMA_Cmd(DMA2_Stream1, ENABLE);                                              // å¼€å¯ DMA 
 }
 
-void TIM8_UP_TIM13_IRQHandler(void)                                             // TIM8 UP Òç³öÖÐ¶Ï
+void TIM8_UP_TIM13_IRQHandler(void)                                                 // TIM8 UP æº¢å‡ºä¸­æ–­
 {
 	if(TIM_GetITStatus(TIM8,TIM_IT_Update)==SET) 
 	{
 		TIM_Cmd(TIM8, DISABLE);
-		TIM_ClearITPendingBit(TIM8,TIM_IT_Update);			                    // Çå³ýÖÐ¶Ï±êÖ¾Î»
+		TIM_ClearITPendingBit(TIM8,TIM_IT_Update);			    // æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
 
 		printf("TIMER_8 update update update update update update update !\n");
 
 		timer8_times_count++;
 		
-		if(timer8_times_count>=100)												// 100´ÎÖÐ¶Ïºó£¬¹Ø±Õ¶¨Ê±£¬¼´Í£Ö¹TIM8 ´¥·¢ DMA 
+		if(timer8_times_count>=100)					    // 100æ¬¡ä¸­æ–­åŽï¼Œå…³é—­å®šæ—¶ï¼Œå³åœæ­¢TIM8 è§¦å‘ DMA 
 		{
 			TIM_Cmd(TIM8, DISABLE);
-			DMA2_Stream3->CR = 0;												// Çå¿ÕÍâÉè¼Ä´æÆ÷ 
+			DMA2_Stream3->CR = 0;					    // æ¸…ç©ºå¤–è®¾å¯„å­˜å™¨ 
 		}
-		else																	// 100´ÎÒÔÄÚ£¬¼ÌÐø´¥·¢DMA 
+		else																	// 100æ¬¡ä»¥å†…ï¼Œç»§ç»­è§¦å‘DMA 
 		{
 			TIM_Cmd(TIM8, ENABLE);
 		}		
@@ -116,7 +116,7 @@ int main(void)
 
 /* 
 
-´òÓ¡½á¹û£º 
+æ‰“å°ç»“æžœï¼š 
 					......
 					 
 	DMA2_Stream3->CR =	0x06030442;
